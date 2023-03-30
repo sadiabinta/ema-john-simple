@@ -16,8 +16,22 @@ const Shop = () => {
 
     useEffect(()=>{
         const storedCart=getShoppingCart();
-        console.log(storedCart);
-    },[])
+        const savedCart=[];
+        //step 1 get i d of added product
+        for(const id in products){
+            //step 2 get product by id
+            const addedProduct=products.find(product=>product.id===id)
+            if(addedProduct){//otherwise gives error when empty
+                //step 3 add quantity
+                const quantity=storedCart[id];
+                addedProduct.quantity=quantity;
+                //step 4 add adder product to saved product
+                savedCart.push(addedProduct);
+            }
+        }
+        // stwp 5 set cart
+        setCart(savedCart)
+    },[products])//dependency so that this is called after loading product
     const handleAddToCart =(product)=>{
         const newCart=[...cart,product];
         setCart(newCart);
