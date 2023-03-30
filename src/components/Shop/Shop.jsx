@@ -18,10 +18,10 @@ const Shop = () => {
         const storedCart=getShoppingCart();
         const savedCart=[];
         //step 1 get i d of added product
-        for(const id in products){
+        for(const id in storedCart){
             //step 2 get product by id
             const addedProduct=products.find(product=>product.id===id)
-            if(addedProduct){//otherwise gives error when empty
+            if(addedProduct){ //otherwise gives error when empty
                 //step 3 add quantity
                 const quantity=storedCart[id];
                 addedProduct.quantity=quantity;
@@ -33,7 +33,21 @@ const Shop = () => {
         setCart(savedCart)
     },[products])//dependency so that this is called after loading product
     const handleAddToCart =(product)=>{
-        const newCart=[...cart,product];
+        let newCart=[];
+        //const newCart=[...cart,product];
+        //if product does not exist in the cart, then set quantity 1
+        //if exist update by 1
+        const exists= cart.find(pd =>pd.id===product.id);
+        if(!exists){
+            product.quantity=1;
+            newCart=[...cart,product]
+        }
+        else{
+            exists.quantity=exists.quantity+1;
+            const remaining=cart.filter(pd=>pd.id!==product.id);
+            newCart=[...remaining,exists]
+        }
+
         setCart(newCart);
         addToDb(product.id)
     }
